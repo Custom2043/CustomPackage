@@ -1,10 +1,15 @@
 package drawer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.util.glu.GLU.*;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
@@ -69,9 +74,8 @@ public abstract class CustomDrawer
 			screenGuiModified = false;
 			return true;
 		}
-		else 
-			return false;
-		
+		return false;
+
 	}
 	public static void load3D(float fov)
 	{
@@ -183,9 +187,7 @@ public abstract class CustomDrawer
 	public static void blitWithColor(Texture text, ScreenCoor coor, TextureCoor textureCoor, int r, int v, int b, int a)
 	{
 		if (text == null)
-		{
 			drawRect(coor,r, v, b, a);
-		}
 		else
 		{
 			glColor4ub((byte)r, (byte)v, (byte)b, (byte)a);
@@ -247,24 +249,25 @@ public abstract class CustomDrawer
 	}
 	public static void drawModel(Model model)
 	{
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		
+		drawModelPart(model, 0, model.vertexNumber);
+	}
+	public static void drawModelPart(Model model, int base, int length)
+	{
 		glColor4f(1,1,1,1);
-		
+
 		if (model.texture != null)
 			model.texture.bind();
-		
+
 		GL30.glBindVertexArray(model.vaoId);
-		
+
 		for (int i=0;i<16;i++)
 			if (model.isVertexArrayEnabled(i))
 				GL20.glEnableVertexAttribArray(i);
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, model.vertexNumber);
+		GL11.glDrawArrays(GL11.GL_QUADS, base, length);
 		for (int i=0;i<16;i++)
 			if (model.isVertexArrayEnabled(i))
 				GL20.glEnableVertexAttribArray(i);
-		
+
 		GL30.glBindVertexArray(0);
 	}
 	public static void drawString(float x, float y, boolean centeredX, boolean centeredY, String text, AngelCodeFont font, Color c)

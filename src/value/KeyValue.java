@@ -10,13 +10,13 @@ public class KeyValue
 	public String nom;
 	public KeyValue (int v, String n)
 	{
-		nom = n;
-		value = defaut = v;
+		this.nom = n;
+		this.value = this.defaut = v;
 	}
 	public String getKeyName()
 	{
-		if (value < MOUSE_MIN_VALUE)
-			return Keyboard.getKeyName(value);
+		if (this.value < MOUSE_MIN_VALUE)
+			return Keyboard.getKeyName(this.value);
 		else
 			return "Souris "+(this.value-MOUSE_MIN_VALUE);
 	}
@@ -28,7 +28,7 @@ public class KeyValue
 	public int getMouseValue(){return this.value - MOUSE_MIN_VALUE;}
 	public int getValue()
 	{
-		return value;
+		return this.value;
 	}
 	public void setValue(int value)
 	{

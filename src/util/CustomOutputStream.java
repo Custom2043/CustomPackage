@@ -14,7 +14,7 @@ public class CustomOutputStream extends DataOutputStream
 	{
 		super(os);
 	}
-	public CustomOutputStream(File arg0) throws FileNotFoundException 
+	public CustomOutputStream(File arg0) throws FileNotFoundException
 	{
 		this(new BufferedOutputStream(new FileOutputStream(arg0)));
 	}

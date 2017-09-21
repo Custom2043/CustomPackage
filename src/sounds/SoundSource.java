@@ -5,7 +5,7 @@ import org.lwjgl.openal.AL10;
 class SoundSource extends Source
 {
 	Sound sound;
-	SoundSource(int s, boolean p, Sound so, boolean loop, float x, float y, float z, float mD, float rD, float roll) 
+	SoundSource(int s, boolean p, Sound so, boolean loop, float x, float y, float z, float mD, float rD, float roll)
 	{
 		super(s, p, loop, x, y, z, mD, rD, roll);
 		this.sound = so;

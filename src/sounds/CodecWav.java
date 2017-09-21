@@ -31,7 +31,7 @@ public class CodecWav extends Codec
 				this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_STEREO8;
 			else if (this.bitsPerSample == 16)
 				this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
-			
+
 			Logger.debug("samplerate : " + this.samplerate, this.getClass());
 			Logger.debug("channels : " + this.channels, this.getClass());
 			Logger.debug("audioFormat : " + this.audioFormat, this.getClass());
@@ -43,26 +43,26 @@ public class CodecWav extends Codec
 		try
 		{
 			ByteBuffer bb = ByteBuffer.allocateDirect(Math.min(length, this.fileSize - (int)(this.file.position()-44)));
-			
+
 			//Position - entete
 			this.file.read(bb);
-			
+
 			bb.clear();
-			
+
 			return bb;
-		} 
+		}
 		catch (IOException e) {Logger.error(e, this.getClass());}
 		return null;
 	}
-	
+
 	FileChannel openFile(String s)
 	{
-		try {return FileChannel.open(Paths.get(s));} 
+		try {return FileChannel.open(Paths.get(s));}
 		catch (IOException e) {Logger.error(e, this.getClass());return null;}
 	}
 
 	@Override
-	public void quit() 
+	public void quit()
 	{
 		try {
 			this.file.close();

@@ -1,16 +1,17 @@
 package value;
 
-public class SliderValue
+public class SliderValue extends CustomValue
 {
-	public int max, min, value;
-	
+	public int min;
+
 	public SliderValue(int mi, int ma, int va)
 	{
-		max = ma; min = mi; value = va;
+		super(ma, va);
+		this.max = ma; this.min = mi; this.value = va;
 	}
-	
+
 	public float getPourcent()
 	{
-		return value / 100f;
+		return this.value / 100f;
 	}
 }

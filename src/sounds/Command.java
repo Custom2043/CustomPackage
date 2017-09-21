@@ -11,12 +11,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.Logger;
 
-abstract class Command 
+abstract class Command
 {
 	private static boolean GET = true,
 						   SET = false;
 	boolean ready = false, ended = false;
-	
+
 	Command()
 	{
 	}
@@ -84,7 +84,7 @@ abstract class Command
 		@Override
 		void handle()
 		{
-			stop(this.source); 
+			stop(this.source);
 		}
 		private static void stop(Source s)
 		{
@@ -110,7 +110,7 @@ abstract class Command
 			Logger.debug("Pause source "+this.source.sourceId, this.getClass());
 			deleteFromChannels(this.source.sourceId);
 			AL10.alSourcePause(this.source.sourceId);
-			
+
 		}
 	}
 	static class CommandDeleteSource extends SourceCommand
@@ -125,9 +125,9 @@ abstract class Command
 		{
 			if (CommandPlaying.playing(source))
 				CommandStop.stop(source);
-			
+
 			AL10.alDeleteSources(source.sourceId);//NE SUPPRIMER PAS LES BUFFERS !
-			
+
 			if (remove)
 				for (Iterator<Source> iter = SoundSystem.sources.iterator();iter.hasNext();)
 					if (iter.next().sourceId == source.sourceId)
@@ -141,13 +141,13 @@ abstract class Command
 		@Override
 		void handle()
 		{
-			try 
+			try
 			{
 				Sound s = new Sound(this.codec.getConstructor(String.class).newInstance(this.soundPath), this.soundPath);
 				sounds.add(s);
-			} 
-			catch (Exception e) {Logger.error(e, this.getClass());} 
-			
+			}
+			catch (Exception e) {Logger.error(e, this.getClass());}
+
 		}
 	}
 	static class CommandUnloadSound extends Command
@@ -158,7 +158,7 @@ abstract class Command
 		void handle()
 		{
 			unloadSound(this.soundPath, true);
-			
+
 		}
 		private static void unloadSound(String soundPath, boolean remove)
 		{
@@ -179,9 +179,7 @@ abstract class Command
 				AL10.alDeleteBuffers(s.buffer);
 				Logger.debug("Unload sound "+s.buffer, CommandUnloadSound.class);
 				if (remove)
-				{
 					iter.remove();
-				}
 			}
 		}
 	}
@@ -198,26 +196,22 @@ abstract class Command
 			int sourceId = AL10.alGenSources();
 			Source source = null;
 			if (this.streaming)
-			{
-				try 
+				try
 				{
 					source = new StreamingSource(this.codec.getConstructor(String.class).newInstance(this.soundPath), sourceId, this.prior, this.loop, this.x,this.y,this.z, this.maxD, this.referD, this.rolloff);
-				} 
-				catch (Exception e) {Logger.error(e, this.getClass());} 
-			}
+				}
+				catch (Exception e) {Logger.error(e, this.getClass());}
 			else
 			{ // Load Sound
 				Sound s = getSound(this.soundPath);
-				
+
 				if (s == null)
-				{
-					try 
+					try
 					{
 						s = new Sound(this.codec.getConstructor(String.class).newInstance(this.soundPath), this.soundPath);
 						sounds.add(s);
-					} 
-					catch (Exception e) {Logger.error(e, this.getClass());} 
-				}
+					}
+					catch (Exception e) {Logger.error(e, this.getClass());}
 				AL10.alSourcei(sourceId, AL10.AL_BUFFER, s.buffer);
 				//Logger.debug("End of loading of sound "+s.path+", number of buffer : "+, CommandNewSource.class);
 				source = new SoundSource(sourceId, this.prior, s, this.loop, this.x, this.y, this.z, this.maxD, this.referD, this.rolloff);
@@ -250,7 +244,7 @@ abstract class Command
 				//CommandDeleteSource.deleteSource(s, false);
 			for (Sound s : sounds)
 				CommandUnloadSound.unloadSound(s.path, false);
-			
+
 		}
 	}
 	static class CommandFloat extends GetSetCommand
@@ -345,28 +339,28 @@ abstract class Command
 	static class CommandPosition extends GetSetCommand
 	{
 		int offsetMod, value;
-		CommandPosition(int sourceId, int oM) {super(GET, sourceId);offsetMod = oM;}
-		CommandPosition(int sourceId, int oM, int v) {super(SET, sourceId);offsetMod = oM;value=v;}
+		CommandPosition(int sourceId, int oM) {super(GET, sourceId);this.offsetMod = oM;}
+		CommandPosition(int sourceId, int oM, int v) {super(SET, sourceId);this.offsetMod = oM;this.value=v;}
 		@Override
-		void handle() 
+		void handle()
 		{
-			if (get)
+			if (this.get)
 			{
-				if (offsetMod == SoundSystem.byteOffset)
-					value = AL10.alGetSourcei(source.sourceId, AL11.AL_BYTE_OFFSET);
-				if (offsetMod == SoundSystem.sampleOffset)
-					value = AL10.alGetSourcei(source.sourceId, AL11.AL_SAMPLE_OFFSET);
-				if (offsetMod == SoundSystem.secondOffset)
-					value = AL10.alGetSourcei(source.sourceId, AL11.AL_SEC_OFFSET);
+				if (this.offsetMod == SoundSystem.byteOffset)
+					this.value = AL10.alGetSourcei(this.source.sourceId, AL11.AL_BYTE_OFFSET);
+				if (this.offsetMod == SoundSystem.sampleOffset)
+					this.value = AL10.alGetSourcei(this.source.sourceId, AL11.AL_SAMPLE_OFFSET);
+				if (this.offsetMod == SoundSystem.secondOffset)
+					this.value = AL10.alGetSourcei(this.source.sourceId, AL11.AL_SEC_OFFSET);
 			}
 			else
 			{
-				if (offsetMod == SoundSystem.byteOffset)
-					AL10.alSourcei(source.sourceId, AL11.AL_BYTE_OFFSET, value);
-				if (offsetMod == SoundSystem.sampleOffset)
-					AL10.alSourcei(source.sourceId, AL11.AL_SAMPLE_OFFSET, value);
-				if (offsetMod == SoundSystem.secondOffset)
-					AL10.alSourcei(source.sourceId, AL11.AL_SEC_OFFSET, value);
+				if (this.offsetMod == SoundSystem.byteOffset)
+					AL10.alSourcei(this.source.sourceId, AL11.AL_BYTE_OFFSET, this.value);
+				if (this.offsetMod == SoundSystem.sampleOffset)
+					AL10.alSourcei(this.source.sourceId, AL11.AL_SAMPLE_OFFSET, this.value);
+				if (this.offsetMod == SoundSystem.secondOffset)
+					AL10.alSourcei(this.source.sourceId, AL11.AL_SEC_OFFSET, this.value);
 			}
 		}
 	}

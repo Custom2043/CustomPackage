@@ -40,9 +40,7 @@ public abstract class CustomGui
 	public void type()
 	{
 		for (Iterator<CustomBouton> iter = this.boutons.iterator();iter.hasNext();)
-		{
 			iter.next().keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
-		}
 		this.keyboardEvent(Keyboard.getEventCharacter(), Keyboard.getEventKey());
 	}
 	/**
@@ -61,8 +59,6 @@ public abstract class CustomGui
 	public void drawButtons()
 	{
 		for (Iterator<CustomBouton> iter = this.boutons.iterator();iter.hasNext();)
-		{
 			iter.next().draw();
-		}
 	}
 }

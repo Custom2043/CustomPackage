@@ -16,21 +16,15 @@ public abstract class CustomMultipleStateBouton extends CustomBouton
 		this.options.value ++;
 		if (this.options.value >= this.options.max)
 			this.options.value = 0;
-		clickOn();
+		this.clickOn();
 	}
 	public abstract void clickOn();
 	@Override
 	public void click(CustomBouton boutonOn, boolean appuie, int clicID, int X, int Y)
 	{
 		if (clicID == 0)
-		{
 			if (appuie)
-			{
 				if (boutonOn == this)
-				{
 					this.changeState();
-				}
-			}
-		}
 	}
 }

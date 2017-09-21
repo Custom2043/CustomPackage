@@ -31,26 +31,18 @@ public abstract class CustomBarre extends CustomBoutonContainer
 	public void click(CustomBouton boutonOn, boolean appuie, int clicID, int X, int Y)
 	{
 		if (boutonOn == this)
-		{
 			if (clicID == 0)
 				if (appuie)
 					this.activ();
-		}
 		if (clicID == 0)
 			if (!appuie)
 				this.desactiv();
 		if (Mouse.isButtonDown(0))
-		{
 			if (this.isActiv())
 				this.setPosition(Y);
-		}
 		if (boutonOn != this && Y >= 0 && Y <= this.coor.getHeight())
-		{
 			for (Iterator<CustomBouton> iter = this.boutons.iterator(); iter.hasNext();)
-			{
 				iter.next().click(boutonOn, appuie, clicID, X, Y);
-			}
-		}
 	}
 	@Override
 	public CustomBouton getBoutonWithCoor(int X, int Y)
@@ -83,10 +75,10 @@ public abstract class CustomBarre extends CustomBoutonContainer
 	{
 		this.setValue(this.value - Mouse.getDWheel());
 		this.drawBarre();
-		Iterator<CustomBouton> iter = this.boutons.iterator();
-		for (CustomBouton cb; iter.hasNext();)
+
+		for (Iterator<CustomBouton> iter = this.boutons.iterator(); iter.hasNext();)
 		{
-			cb = iter.next();
+			CustomBouton cb = iter.next();
 			cb.coor = cb.coor.addYFlat(this.oldValue-this.value);
 			cb.draw();
 		}

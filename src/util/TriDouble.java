@@ -1,6 +1,6 @@
 package util;
 
-public class TriDouble 
+public class TriDouble
 {
 	public double x, y, z;
 	public TriDouble(){this(0,0,0);}

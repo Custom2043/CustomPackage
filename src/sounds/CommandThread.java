@@ -27,13 +27,12 @@ class CommandThread extends Thread
 			for (int i=0;i<SoundSystem.NB_NONSTREAMING_SOURCES;i++)
 				if (SoundSystem.nonStreamingSourcesPlaying[i] != null)
 					if (AL10.alGetSourcei(SoundSystem.nonStreamingSourcesPlaying[i].sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_STOPPED)
-					{							
+					{
 						Logger.debug("Found stopped source : "+SoundSystem.nonStreamingSourcesPlaying[i].sourceId, CommandThread.class);
 						new Command.CommandStop(SoundSystem.nonStreamingSourcesPlaying[i].sourceId).handle(); // Son fini
 					}
 			for (int i=0;i<SoundSystem.NB_STREAMING_SOURCES;i++)
 				if (SoundSystem.streamingSourcesPlaying[i] != null)
-				{
 					if (AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_STOPPED && !SoundSystem.streamingSourcesPlaying[i].loop)
 					{
 						Logger.debug("Found stopped source : "+SoundSystem.streamingSourcesPlaying[i].sourceId, CommandThread.class);
@@ -57,7 +56,7 @@ class CommandThread extends Thread
 								source.codec.reset();
 								bb = source.codec.read();
 							}
-							if (bb.capacity() != 0) // Encore des données
+							if (bb.capacity() != 0) // Encore des donnï¿½es
 							{
 								source.buffers[2] = AL10.alGenBuffers();
 								AL10.alBufferData(source.buffers[2], source.codec.audioFormat, bb, source.codec.samplerate);
@@ -67,7 +66,6 @@ class CommandThread extends Thread
 						if (AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_STOPPED)
 							AL10.alSourcePlay(SoundSystem.streamingSourcesPlaying[i].sourceId);
 					}
-				}
 
 			for (Iterator<Command> iter = this.list.getList().iterator();iter.hasNext();)
 			{
@@ -75,14 +73,14 @@ class CommandThread extends Thread
 				c.ready = true;
 				Logger.debug("Execute Command : "+c.getClass().getName(), CommandThread.class);
 				while (!c.ended)
-					try {Thread.sleep(0, 10);} 
+					try {Thread.sleep(0, 10);}
 					catch (InterruptedException e) {}
 				iter.remove();
 			}
 			if (this.continu && this.list.getList().size() == 0)
 				try {Thread.sleep(10);}
 				catch (InterruptedException e) {}
-			
+
 		}
 	}
 	protected static IntBuffer createIntBuffer(int size) {

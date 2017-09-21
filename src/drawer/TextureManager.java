@@ -1,12 +1,11 @@
 package drawer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
-
-import util.DecryptInputStream;
 
 public class TextureManager
 {
@@ -20,6 +19,9 @@ public class TextureManager
 
 	public Texture loadTexture(String name, String mod)
 	{
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 		File f = new File(textFolder + name);
 		if (!f.exists())
 		{
@@ -29,7 +31,7 @@ public class TextureManager
 		try
 		{
 			System.out.println("TextureManager ; Charge texture : "+f.getAbsolutePath());
-			Texture t = TextureLoader.getTexture(mod, new DecryptInputStream(f));
+			Texture t = TextureLoader.getTexture(mod, new FileInputStream(f));
 			this.list.add(t);
 			return t;
 		}

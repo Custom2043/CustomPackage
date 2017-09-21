@@ -34,7 +34,6 @@ public abstract class CustomKeyBouton extends CustomBouton
 	public void click(CustomBouton boutonOn, boolean appuie, int clicID, int X, int Y)
 	{
 		if (appuie)
-		{
 			if (this.isActiv)
 				if (boutonOn == this)
 					this.setClic(clicID);
@@ -43,7 +42,6 @@ public abstract class CustomKeyBouton extends CustomBouton
 			else if (clicID == 0)
 					if (boutonOn == this)
 						this.activ();
-		}
 	}
 	@Override
 	public void keyTyped(char carac, int keyCode)

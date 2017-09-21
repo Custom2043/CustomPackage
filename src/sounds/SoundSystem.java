@@ -14,22 +14,22 @@ public class SoundSystem
 	public static int noAtte = 0, linearAtte = 1, linearAtteClamped = 2, expoAtte = 3,
 					  expoAtteClamped = 4, inverseAtte = 5, inverseAtteClamped = 6,
 					  byteOffset = 7, sampleOffset = 8, secondOffset = 9;
-	
+
 	static float masterVolume = 1;
-	
+
 	static CommandThread commands;
-	
+
 	static final int NB_STREAMING_SOURCES = 4;
 	static final int NB_NONSTREAMING_SOURCES = 28;
-	
+
 	static StreamingSource[] streamingSourcesPlaying = new StreamingSource[NB_STREAMING_SOURCES];
 	static SoundSource[] nonStreamingSourcesPlaying = new SoundSource[NB_NONSTREAMING_SOURCES];
-	
+
 	static ArrayList<Source> sources= new ArrayList<Source>();
 	static ArrayList<Sound> sounds= new ArrayList<Sound>();
-	
+
 	static Class<? extends Codec> defaultCodec = CodecWav.class;
-	
+
 	static int getFreePos(Source[] s)
 	{
 		for (int i = 0;i<s.length;i++)
@@ -84,7 +84,7 @@ public class SoundSystem
 	{
 		if (AL.isCreated())
 			return true;
-		try 
+		try
 		{
 			AL.create();
 			AL10.alListener3f(AL10.AL_POSITION, 0,0,0);
@@ -173,7 +173,7 @@ public class SoundSystem
 	{
 		Command.executeInThread(new Command.CommandPosition(sourceId, offsetMod, value));
 	}
-	public static int getOffset(int sourceId, int offsetMod, int value)
+	public static int getOffset(int sourceId, int offsetMod)
 	{
 		return Command.executeInThread(new Command.CommandPosition(sourceId, offsetMod)).value;
 	}

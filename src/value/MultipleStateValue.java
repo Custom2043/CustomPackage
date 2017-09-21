@@ -6,6 +6,6 @@ public class MultipleStateValue extends CustomValue
 	public MultipleStateValue(int s, String[] n)
 	{
 		super(n.length, s);
-		noms = n;
+		this.noms = n;
 	}
 }

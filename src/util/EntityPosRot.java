@@ -8,13 +8,13 @@ public class EntityPosRot
 	public EntityPosRot(){this(0,0,0,0,0,0);}
 	public EntityPosRot (double x, double y, double z, double xAngle, double yAngle, double zAngle)
 	{
-		pos = new TriDouble(x,y,z);
-		angle = new TriDouble(xAngle, yAngle, zAngle);
+		this.pos = new TriDouble(x,y,z);
+		this.angle = new TriDouble(xAngle, yAngle, zAngle);
 	}
 	public EntityPosRot(TriDouble p, TriDouble r)
 	{
-		pos = p;
-		angle = r;
+		this.pos = p;
+		this.angle = r;
 	}
 	public void copyFrom(EntityPosRot rp)
 	{

@@ -28,21 +28,15 @@ public class Trait
 		float det = this.w*t.h - this.h * t.w;
 		if (det == 0) // Parallèle
 		{
-			if ((this.x - t.x) * t.h == (this.y - t.y) * t.w) // Sur le même axe
-			{
+			if ((this.x - t.x) * t.h == (this.y - t.y) * t.w)
 				if (t.h == 0) // Parallèle à x
 					return this.getLowX() <= t.getHighX() && this.getHighX() >= t.getLowX();
-				else
-					return this.getLowY() <= t.getHighY() && this.getHighY() >= t.getLowY();
-			}	
+				return this.getLowY() <= t.getHighY() && this.getHighY() >= t.getLowY();
 		}
-		else
-		{
-			float m = -(-this.w*this.y+this.w*t.y+this.h*this.x-this.h*t.x)/det;
-			float k = -(t.h*this.x-t.x*t.h-t.w*this.y+t.w*t.y)/det;
-			if (m >= 0 && m <= 1 && k >= 0 && k <= 1)
-				return true;
-		}
+		float m = -(-this.w*this.y+this.w*t.y+this.h*this.x-this.h*t.x)/det;
+		float k = -(t.h*this.x-t.x*t.h-t.w*this.y+t.w*t.y)/det;
+		if (m >= 0 && m <= 1 && k >= 0 && k <= 1)
+			return true;
 		return false;
 	}
 	public float getXPosAtY(float y)

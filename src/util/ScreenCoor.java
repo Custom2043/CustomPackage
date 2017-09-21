@@ -8,19 +8,19 @@ public class ScreenCoor
 {
 	public static ScreenCoor AllScreen = new ScreenCoor(0,0,1,1,0,0,0,0,0,0,0,0);
 	public float xScreen,yScreen,wScreen,hScreen, xGui, yGui, wGui, hGui, xFlat, yFlat, wFlat, hFlat;
-	
+
 	public static ScreenCoor screen(float x, float y, float w, float h){return new ScreenCoor(x,y,w,h,0,0,0,0,0,0,0,0);}
 	public static ScreenCoor screenGui(float x, float y, float w, float h, float xG, float yG, float wG, float hG){return new ScreenCoor(x,y,w,h,xG,yG,wG,hG,0,0,0,0);}
 	public static ScreenCoor screenFlat(float x, float y, float w, float h, float xF, float yF, float wF, float hF){return new ScreenCoor(x,y,w,h,0,0,0,0,xF,yF,wF,hF);}
 	public static ScreenCoor screenGuiFlat(float x, float y, float w, float h, float xG, float yG, float wG, float hG, float xF, float yF, float wF, float hF){return new ScreenCoor(x,y,w,h,xG,yG,wG,hG,xF,yF,wF,hF);}
-	
+
 	public static ScreenCoor gui(float xG, float yG, float wG, float hG){return new ScreenCoor(0,0,0,0,xG,yG,wG,hG,0,0,0,0);}
 	public static ScreenCoor guiFlat(float xG, float yG, float wG, float hG, float xF, float yF, float wF, float hF){return new ScreenCoor(0,0,0,0,xG,yG,wG,hG,xF,yF,wF,hF);}
 
 	public static ScreenCoor flat(float xF, float yF, float wF, float hF){return new ScreenCoor(0,0,0,0,0,0,0,0,xF,yF,wF,hF);}
 
 	public static ScreenCoor nul(){return new ScreenCoor(0,0,0,0,0,0,0,0,0,0,0,0);}
-	
+
 	private ScreenCoor(float x,float y,float w,float h, float xG, float yG, float wG, float hG, float xF, float yF, float wF, float hF)
 	{
 		this.xScreen = x; this.xGui = xG; this.xFlat = xF;
@@ -30,7 +30,7 @@ public class ScreenCoor
 	}
 	public float[] inFloatArray()
 	{
-		return new float[]{this.getStartX(), this.getStartY(), this.getEndX(), this.getStartY(), this.getEndX(), this.getEndY(), this.getStartX(), this.getEndY()};
+		return new float[]{this.getStartX(), this.getStartY(), this.getStartX(), this.getEndY(), this.getEndX(), this.getEndY(), this.getEndX(), this.getStartY()};
 	}
 	@Override
 	public String toString()
@@ -131,6 +131,7 @@ public class ScreenCoor
 	public ScreenCoor addWFlat(float wFlat){return new ScreenCoor(this.xScreen,this.yScreen,this.wScreen,this.hScreen, this.xGui, this.yGui, this.wGui, this.hGui, this.xFlat, this.yFlat, this.wFlat+wFlat, this.hFlat);}
 	public ScreenCoor addHFlat(float hFlat){return new ScreenCoor(this.xScreen,this.yScreen,this.wScreen,this.hScreen, this.xGui, this.yGui, this.wGui, this.hGui, this.xFlat, this.yFlat, this.wFlat, this.hFlat+hFlat);}
 
+	@Override
 	public ScreenCoor clone()
 	{
 		return screenGuiFlat(this.xScreen,this.yScreen,this.wScreen,this.hScreen, this.xGui, this.yGui, this.wGui, this.hGui, this.xFlat, this.yFlat, this.wFlat, this.hFlat);

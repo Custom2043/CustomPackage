@@ -21,7 +21,7 @@ public class ScreenCoorModel extends ColoredScreenCoorModel
 		super(sc, c);
 		this.texture = text;
 		this.enableVertexArray(3);
-		
+
 		ByteBuffer buf = BufferUtils.createByteBuffer(this.vertexNumber * 8); // Textures
 		if (tc != null && this.texture != null)
 		for (TextureCoor t : tc)

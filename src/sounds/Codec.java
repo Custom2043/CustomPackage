@@ -2,7 +2,7 @@ package sounds;
 
 import java.nio.ByteBuffer;
 
-public abstract class Codec 
+public abstract class Codec
 {
 	public int samplerate,audioFormat, bufferSize;
 	public ByteBuffer read() {

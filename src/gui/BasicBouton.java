@@ -14,30 +14,30 @@ public class BasicBouton extends CustomBouton
 	static
 	{
 		try {
-			font = new AngelCodeFont("Tahoma_18.fnt","Tahoma_18.png");} 
+			font = new AngelCodeFont("Tahoma_18.fnt","Tahoma_18.png");}
 		catch (SlickException e) {Logger.error(e, BasicBouton.class);}
 	}
-	public BasicBouton(String n, int i, ScreenCoor c, boolean a) 
+	public BasicBouton(String n, int i, ScreenCoor c, boolean a)
 	{
 		super(n, i, c, a);
 	}
 
 	@Override
-	protected void draw() 
+	public void draw()
 	{
-		CustomDrawer.drawRect(this.coor, isActiv() ? Color.white : Color.gray);
+		CustomDrawer.drawRect(this.coor, this.isActiv() ? Color.white : Color.gray);
 		font.drawString((int)(this.coor.getMiddleX() - font.getWidth(this.nom)/2), (int)(this.coor.getMiddleY() - font.getHeight(this.nom)/2), this.nom, Color.black);
 	}
 
 	@Override
 	protected void click(CustomBouton boutonOn, boolean appuie, int clicID,
 			int X, int Y) {
-		
+
 	}
 
 	@Override
 	protected void keyTyped(char carac, int keyCode) {
-		
+
 	}
 
 }

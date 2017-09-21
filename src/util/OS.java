@@ -1,15 +1,15 @@
 package util;
 
-public class OS 
+public class OS
 {
 	/**
-	 * CURRENT_OS == -1: OS Inconnu 
+	 * CURRENT_OS == -1: OS Inconnu
 	 * CURRENT_OS == 0 : Pour tout OS
 	 */
 	public static final String[] OSNAME = {"_all", "win", "mac", "sol", "lin"};
 	public static final int CURRENT_OS = getOSID();
 	public static final int NUMBER_OS = OSNAME.length;
-	
+
 	private static int getOSID()
 	{
 		String osName = System.getProperty("os.name");

@@ -4,7 +4,7 @@ import org.lwjgl.openal.AL10;
 
 import util.Logger;
 
-abstract class Source 
+abstract class Source
 {
 	final int sourceId;
 	boolean priority;
@@ -13,13 +13,13 @@ abstract class Source
 		this.sourceId = s;
 		this.priority = p;
 		this.setLooping(loop);
-		
+
 		Logger.debug("Load source "+this.sourceId, this.getClass());
-		
+
 		AL10.alSourcef(this.sourceId, AL10.AL_GAIN, 1f);
 		AL10.alSourcef(this.sourceId, AL10.AL_PITCH, 1);
 		AL10.alSource3f(this.sourceId, AL10.AL_POSITION, x,y,z);
-		
+
 		AL10.alSourcef(this.sourceId, AL10.AL_MAX_DISTANCE, mD);
 		AL10.alSourcef(this.sourceId, AL10.AL_REFERENCE_DISTANCE, rD);
 		AL10.alSourcef(this.sourceId, AL10.AL_ROLLOFF_FACTOR, roll);

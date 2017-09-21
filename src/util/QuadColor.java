@@ -2,7 +2,7 @@ package util;
 
 import org.newdawn.slick.Color;
 
-public class QuadColor 
+public class QuadColor
 {
 	Color u, d, t, q;
 	public QuadColor(Color hg, Color hd, Color bg, Color bd)

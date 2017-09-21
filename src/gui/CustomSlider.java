@@ -32,27 +32,15 @@ public abstract class CustomSlider extends CustomBouton
 	public void click(CustomBouton boutonOn, boolean appuie, int clicID, int X, int Y)
 	{
 		if (clicID == 0)
-		{
 			if (appuie)
 			{
 				if (boutonOn == this)
-				{
 					this.activ();
-				}
-			}
-			else
-			{
-				if (this.isActiv)
-				{
-					this.desactiv();
-				}
-			}
-		}
+			} else if (this.isActiv)
+				this.desactiv();
 		if (Mouse.isButtonDown(0))
-		{
-				if (this.isActiv)
-					this.setPosition(X);
-		}
+			if (this.isActiv)
+				this.setPosition(X);
 	}
 	@Override
 	public void keyTyped(char carac, int keyCode)

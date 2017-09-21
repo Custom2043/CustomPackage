@@ -7,7 +7,7 @@ public class CustomTimer
 	public long difference;
 	public CustomTimer()
 	{
-		set0();
+		this.set0();
 	}
 	/**
 	 * Obtenir difference depuis set0() en milliseconde ; Ne reset PAS !

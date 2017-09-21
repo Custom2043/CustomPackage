@@ -6,19 +6,19 @@ import org.lwjgl.util.vector.Vector2f;
 
 import util.Logger;
 
-public class Collision 
+public class Collision
 {
 	public Trait fix;
 	public Vector2f fixVec;
-	
+
 	public ArrayList<Touche> touches = new ArrayList<Touche>();
-	
+
 	public Collision(){}
 	public Collision(Trait f, Vector2f v)
 	{
 		this.fix = f; this.fixVec = v;
 	}
-	
+
 	public void checkAABBandCollision(Trait t, Vector2f v)
 	{
 		if (this.fix.getLowX() + Math.min(0, this.fixVec.x) <= Math.max(0, v.x) +t.getHighX()
@@ -27,43 +27,37 @@ public class Collision
 		&&  this.fix.getHighY()+ Math.max(0, this.fixVec.y) >= Math.min(0, v.y) + t.getLowY())
 			this.checkCollision(t,v);
 	}
-	
+
 	public void checkCollision(Trait moving, Vector2f movingVec)
 	{
 		Vector2f difVec = new Vector2f(movingVec.x - this.fixVec.x, movingVec.y - this.fixVec.y);
 		float det = this.fix.w * difVec.y -  this.fix.h * difVec.x;
 		Matrix2f mat;
 		if (det != 0)
-			mat = new Matrix2f(this.fix.w,this.fix.h,difVec.x,difVec.y,det, new Vector2f(fix.x, fix.y));
+			mat = new Matrix2f(this.fix.w,this.fix.h,difVec.x,difVec.y,det, new Vector2f(this.fix.x, this.fix.y));
 		else
-			mat = new Matrix2f(this.fix.w, this.fix.h, -this.fix.h, this.fix.w, this.fix.w * this.fix.w + this.fix.h * this.fix.h, new Vector2f(fix.x, fix.y));
-		
+			mat = new Matrix2f(this.fix.w, this.fix.h, -this.fix.h, this.fix.w, this.fix.w * this.fix.w + this.fix.h * this.fix.h, new Vector2f(this.fix.x, this.fix.y));
+
 		Trait multedFix = mat.multiply(this.fix), multedMoving = mat.multiply(moving);
-		if (det != 0) // fix non parallèle au vecteur
+		if (det != 0) // fix non parallï¿½le au vecteur
         {
             Carre car = new Carre(multedFix.x, multedFix.y, 1, -1);
             if (car.touch(multedMoving))
-            { 	// Est-ce que le segment coupe le carray
-            	// On cherche le plus haut y de multedMoving entre car.getLowX() et car.getLowY()
-            	if (multedMoving.h == 0) // Parallèle à l'axe x
+				// On cherche le plus haut y de multedMoving entre car.getLowX() et car.getLowY()
+            	if (multedMoving.h == 0) // Parallï¿½le ï¿½ l'axe x
             		this.addTouche(-(multedMoving.y - car.getHighY()), Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, moving, movingVec);
-            	else if (multedMoving.w == 0) // Parallèle à l'axe y
+            	else if (multedMoving.w == 0) // Parallï¿½le ï¿½ l'axe y
             		this.addTouche(-(Math.min(multedMoving.getHighY(), car.getHighY()) - car.getHighY()), multedMoving.y == multedMoving.getHighY() ? 0 : 1, multedMoving.x, moving, movingVec);
-            	else if (multedMoving.h * multedMoving.w > 0) // Ici, x haut = y haut; On cherche donc le plus grand x dans le carré
-            	{	
+            	else if (multedMoving.h * multedMoving.w > 0) // Ici, x haut = y haut; On cherche donc le plus grand x dans le carrï¿½
+            	{
             		if (multedMoving.getHighX() >= car.getHighX())// Passe par l'axe x=1
             			this.addTouche(-(Math.min(multedMoving.getYPosAtX(car.getHighX()),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getYPosAtX(car.getHighX()),car.getHighY()) - multedMoving.y) / multedMoving.h , multedMoving.getXPosAtY(Math.min(multedMoving.getYPosAtX(car.getHighX()),car.getHighY())) - car.getLowX(), moving, movingVec);
             		else//Le segment finit dans le carrÃ©
             			this.addTouche(-(Math.min(multedMoving.getHighY(),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getHighY(),car.getHighY()) - multedMoving.y) / multedMoving.h , multedMoving.getXPosAtY(Math.min(multedMoving.getHighY(),car.getHighY())), moving, movingVec);
-            	}
-            	else // On cherche le plus petit x dans le carré car x bas = y haut
-            	{
-            		if (multedMoving.getLowX() <= car.getLowX()) // Passe par l'axe x=0
-            			this.addTouche(-(Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY()) - multedMoving.y) / multedMoving.h ,  multedMoving.getXPosAtY(Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY())) - car.getLowX(), moving, movingVec);
-            		else // Le segment commence dans le carré
-            			this.addTouche(-(Math.min(multedMoving.getHighY(),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getHighY(),car.getHighY()) - multedMoving.y) / multedMoving.h , multedMoving.getXPosAtY(Math.min(multedMoving.getHighY(),car.getHighY())), moving, movingVec);
-            	}
-            } 
+            	} else if (multedMoving.getLowX() <= car.getLowX()) // Passe par l'axe x=0
+					this.addTouche(-(Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY()) - multedMoving.y) / multedMoving.h ,  multedMoving.getXPosAtY(Math.min(multedMoving.getYPosAtX(car.getLowX()),car.getHighY())) - car.getLowX(), moving, movingVec);
+				else // Le segment commence dans le carrï¿½
+					this.addTouche(-(Math.min(multedMoving.getHighY(),car.getHighY()) - car.getHighY()), (Math.min(multedMoving.getHighY(),car.getHighY()) - multedMoving.y) / multedMoving.h , multedMoving.getXPosAtY(Math.min(multedMoving.getHighY(),car.getHighY())), moving, movingVec);
         }
 		else
 		{
@@ -72,28 +66,22 @@ public class Collision
 			{
 				float xTouche = multedMoving.getXPosAtY(multedFix.y);
 				System.out.println(xTouche);
-				if (!Float.isNaN(xTouche)) // Si moving ne passe pas par l'axe de fix et vec
-				{
+				if (!Float.isNaN(xTouche))
 					if (Float.isInfinite(xTouche)) // Si fix // vec // moving
 					{
-						
+
 						if (multedMoving.getHighX() >= multedFix.getLowX() && multedMoving.getLowX() <= multedFix.getHighX())
-							this.addTouche(0, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, moving, movingVec); // Si t touche fix dès le dÃ©but
-						else if (multedMoving.getHighX() < multedFix.getLowX() && multedMoving.getHighX() >= multedFix.getLowX() - multedVec.x) // Si t avant fix sur l'axe X	   
+							this.addTouche(0, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, moving, movingVec); // Si t touche fix dï¿½s le dÃ©but
+						else if (multedMoving.getHighX() < multedFix.getLowX() && multedMoving.getHighX() >= multedFix.getLowX() - multedVec.x) // Si t avant fix sur l'axe X
 							this.addTouche((multedFix.getLowX() - multedMoving.getHighX()) / multedVec.x, 1, 0, moving, movingVec);
-						else if (multedMoving.getLowX() > multedFix.getHighX() && multedMoving.getLowX() <= multedFix.getHighX() - multedVec.x)// Si t après fix sur X
+						else if (multedMoving.getLowX() > multedFix.getHighX() && multedMoving.getLowX() <= multedFix.getHighX() - multedVec.x)// Si t aprï¿½s fix sur X
 							this.addTouche((multedFix.getHighX() - multedMoving.getLowX()) / multedVec.x, 0, 1, moving, movingVec);
-					}
-					else
-					{
-						if (xTouche >= multedFix.getLowX() && xTouche <= multedFix.getHighX())// Si le traverse
-							this.addTouche(0, (0 - multedMoving.y) / multedMoving.h, xTouche, moving, movingVec);
-						else if (xTouche < multedFix.getLowX() && xTouche >= multedFix.getLowX() - multedVec.x) // Si moving avant fix
-							this.addTouche((multedFix.getLowX() - xTouche) / multedVec.x, (0 - multedMoving.y) / multedMoving.h, 0, moving, movingVec);
-						else if (xTouche > multedFix.getHighX() && xTouche <= multedFix.getHighX() - multedVec.x)// Si t aprÃ¨s fix sur X
-							this.addTouche((multedFix.getHighX() - xTouche) / multedVec.x, (0 - multedMoving.y) / multedMoving.h, 1, moving, movingVec);
-					}
-				}
+					} else if (xTouche >= multedFix.getLowX() && xTouche <= multedFix.getHighX())// Si le traverse
+						this.addTouche(0, (0 - multedMoving.y) / multedMoving.h, xTouche, moving, movingVec);
+					else if (xTouche < multedFix.getLowX() && xTouche >= multedFix.getLowX() - multedVec.x) // Si moving avant fix
+						this.addTouche((multedFix.getLowX() - xTouche) / multedVec.x, (0 - multedMoving.y) / multedMoving.h, 0, moving, movingVec);
+					else if (xTouche > multedFix.getHighX() && xTouche <= multedFix.getHighX() - multedVec.x)// Si t aprÃ¨s fix sur X
+						this.addTouche((multedFix.getHighX() - xTouche) / multedVec.x, (0 - multedMoving.y) / multedMoving.h, 1, moving, movingVec);
 			}
 		}
 	}
@@ -177,16 +165,16 @@ public class Collision
 				{
 					dif = this.getRegularAngle(vecAngle - act.mouvant.getAngle());
 					dif2 = this.getRegularAngle(dif + Math.PI);
-				}				
+				}
 				if (dif > 0 && (haut == null || this.getRegularAngle(vecAngle - haut.getAngle()) > dif))
 					haut = act.mouvant;
-				
+
 				if (dif2 > 0 && (haut == null || this.getRegularAngle(vecAngle - haut.getAngle()) > dif2))
 					haut = act.mouvant;
-				
+
 				if (dif < 0 && (bas == null || this.getRegularAngle(vecAngle - bas.getAngle()) < dif))
 					bas = act.mouvant;
-				
+
 				if (dif2 < 0 && (bas == null || this.getRegularAngle(vecAngle - bas.getAngle()) < dif2))
 					bas = act.mouvant;
 			}
@@ -213,13 +201,11 @@ public class Collision
 		float firstAvance = this.getFirstTouchAvance();
 		ArrayList<Trait> trait = new ArrayList<Trait>();
 		for (Touche t : this.touches)
-		{
 			if (!trait.contains(t.mouvant) && t.avance * 0.99f <= firstAvance)
 			{
 				System.out.println(t.mouvant);
 				trait.add(t.mouvant);
 			}
-		}
 		System.out.println(trait.size());
 		return trait.size();
 	}

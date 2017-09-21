@@ -27,19 +27,19 @@ public class TextureCoor
 	}
 	public float getXStart(Texture text)
 	{
-		return (this.xSize + (this.xFlat/(float)text.getImageWidth()))*text.getWidth();
+		return (this.xSize + (this.xFlat/text.getImageWidth()))*text.getWidth();
 	}
 	public float getYStart(Texture text)
 	{
-		return (this.ySize + (this.yFlat/(float)text.getImageHeight()))*text.getHeight();
+		return (this.ySize + (this.yFlat/text.getImageHeight()))*text.getHeight();
 	}
 	public float getWidth(Texture text)
 	{
-		return (this.wSize + (this.wFlat/(float)text.getImageWidth()))*text.getWidth();
+		return (this.wSize + (this.wFlat/text.getImageWidth()))*text.getWidth();
 	}
 	public float getHeight(Texture text)
 	{
-		return (this.hSize + (this.hFlat/(float)text.getImageHeight()))*text.getHeight();
+		return (this.hSize + (this.hFlat/text.getImageHeight()))*text.getHeight();
 	}
 	public float getXEnd(Texture text)
 	{
@@ -51,7 +51,7 @@ public class TextureCoor
 	}
 	public float[] inFloatArray(Texture text)
 	{
-		return new float[]{getXStart(text), getYStart(text), getXEnd(text), getYStart(text), getXEnd(text), getYEnd(text), getXStart(text), getYEnd(text)};
+		return new float[]{this.getXStart(text), this.getYStart(text), this.getXStart(text), this.getYEnd(text), this.getXEnd(text), this.getYEnd(text), this.getXEnd(text), this.getYStart(text)};
 	}
 }
 

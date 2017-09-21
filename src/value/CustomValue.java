@@ -6,11 +6,15 @@ public abstract class CustomValue
 	public int value;
 	public CustomValue(int m, int v)
 	{
-		max = m;
-		value = v;
+		this.max = m;
+		this.value = v;
 	}
 	public MultipleStateValue getMultiple()
 	{
 		return (MultipleStateValue)this;
+	}
+	public SliderValue getSlider()
+	{
+		return (SliderValue)this;
 	}
 }

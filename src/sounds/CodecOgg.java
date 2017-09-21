@@ -25,11 +25,11 @@ public class CodecOgg extends Codec
 	public ByteBuffer read(int length) {
 		try {
 			byte[] by = new byte[length];
-		
+
 			int red = this.oggStream.read(by);
-		
+
 			ByteBuffer b;
-			
+
 			if (red > -1)
 			{
 				b = ByteBuffer.allocateDirect(red);
@@ -39,7 +39,7 @@ public class CodecOgg extends Codec
 			else
 				b = ByteBuffer.allocateDirect(0);
 			return b;
-		} 
+		}
 		catch (IOException e) {Logger.error(e, this.getClass());}
 		return null;
 	}
@@ -54,7 +54,7 @@ public class CodecOgg extends Codec
 	}
 	FileInputStream openFile(String s)
 	{
-		try {return new FileInputStream(s);} 
+		try {return new FileInputStream(s);}
 		catch (IOException e) {Logger.error(e, this.getClass());return null;}
 	}
 	@Override
@@ -63,5 +63,5 @@ public class CodecOgg extends Codec
 		this.oggStream = new OggInputStream(this.openFile(this.path));}
 		catch (IOException e) {Logger.error(e, this.getClass());}
 	}
-	
+
 }

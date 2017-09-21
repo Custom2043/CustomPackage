@@ -82,8 +82,7 @@ public abstract class CustomZoneTexte extends CustomBouton
 			{
 				if (pos-(this.getFont().getWidth(this.texte.substring(i, i+1))/2)>x)
 					return i;
-				else
-					return i+1;
+				return i+1;
 			}
 		}
 		return this.texte.length();
@@ -144,7 +143,6 @@ public abstract class CustomZoneTexte extends CustomBouton
 	public void keyTyped(char carac, int keyCode)
 	{
 		if (this.isActiv && Keyboard.getEventKeyState())
-		{
 			if (keyCode == Keyboard.KEY_CAPITAL)
 				caps = !caps;
 			else if (keyCode == Keyboard.KEY_RIGHT && this.curseur < this.texte.length())
@@ -177,25 +175,17 @@ public abstract class CustomZoneTexte extends CustomBouton
 			else if (this.isCtrlPressed())
 			{
 				if (keyCode == Keyboard.KEY_V)
-				{
 					if (getClipboardContents() != null)
-					{
 						if (this.isStringAcceptable(getClipboardContents()))
-						{
 							this.writeText(getClipboardContents());
-						}
-					}
-				}
 				if (keyCode == Keyboard.KEY_A)
 				{
 					this.debut = 0;
 					this.setCursor(this.texte.length());
 				}
 				if (keyCode == Keyboard.KEY_C)
-				{
 					if (this.isSelected())
 						setClipboardContents(this.getSelectedText());
-				}
 				if (keyCode == Keyboard.KEY_X)
 				{
 					if (this.isSelected())
@@ -204,17 +194,10 @@ public abstract class CustomZoneTexte extends CustomBouton
 						this.eraseSelection();
 					}
 
-				}
-				else
-				{
+				} else
 					this.addChar(carac);
-				}
-			}
-			else
-			{
+			} else
 				this.addChar(carac);
-			}
-		}
 	}
 	private void addChar(char carac)
 	{
@@ -223,18 +206,12 @@ public abstract class CustomZoneTexte extends CustomBouton
 		if (caps && this.isShiftPressed())
 			maj = false;
 		if (code > 10 && code < 256)
-		{
 			if (maj)
 			{
 				if (this.isStringAcceptable(String.valueOf(Character.toUpperCase(carac))))
 					this.writeText(String.valueOf(Character.toUpperCase(carac)));
-			}
-			else
-			{
-				if (this.isStringAcceptable(String.valueOf(carac)))
-					this.writeText(String.valueOf(carac));
-			}
-		}
+			} else if (this.isStringAcceptable(String.valueOf(carac)))
+				this.writeText(String.valueOf(carac));
 	}
 	private boolean isCtrlPressed()
 	{
@@ -248,8 +225,7 @@ public abstract class CustomZoneTexte extends CustomBouton
 	{
 		if (this.isSelected())
 			return this.texte.substring(0, this.getDebut())+this.texte.substring(this.getFin(), this.texte.length()) + added;
-		else
-			return this.texte.substring(0, this.curseur) + added + this.texte.substring(this.curseur, this.texte.length());
+		return this.texte.substring(0, this.curseur) + added + this.texte.substring(this.curseur, this.texte.length());
 	}
 	private boolean isStringAcceptable(String added)
 	{
@@ -262,9 +238,7 @@ public abstract class CustomZoneTexte extends CustomBouton
 	public void click(CustomBouton boutonOn, boolean appuie, int clicID, int X, int Y)
 	{
 		if (clicID == 0)
-		{
 			if (appuie)
-			{
 				if (boutonOn == this)
 				{
 					this.activ();
@@ -272,12 +246,8 @@ public abstract class CustomZoneTexte extends CustomBouton
 				}
 				else
 					this.desactiv();
-			}
-		}
 		if (Mouse.isButtonDown(0))
-		{
 			if (this.isActiv)
 				this.curseur = this.getPosition(X);
-		}
 	}
 }

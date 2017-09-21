@@ -1,14 +1,14 @@
 package util;
 
-public class Logger 
+public class Logger
 {
 	private static boolean debug = false;
 	private static boolean warning = true;
 	private static boolean error = true;
 	private static boolean excpetionPrintStack = true;
-	
+
 	private Logger(){}
-	
+
 	public static void error(Exception s, Class c)
 	{
 		error(s.toString(), c);
@@ -30,7 +30,7 @@ public class Logger
 			System.err.println("    "+s);
 		}
 	}
-	
+
 	public static void debug(String s, Class c)
 	{
 		if (debug)
@@ -39,7 +39,7 @@ public class Logger
 			System.out.println("    "+s);
 		}
 	}
-	
+
 	public static void warning(String s, Class c)
 	{
 		if (warning)

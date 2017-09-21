@@ -8,12 +8,12 @@ import drawer.CustomDrawer;
 
 public class BasicSlider extends CustomSlider
 {
-	public BasicSlider(String n, int i, ScreenCoor c, SliderValue b) 
+	public BasicSlider(String n, int i, ScreenCoor c, SliderValue b)
 	{
 		super(n, i, c, b);
 	}
 	@Override
-	protected void draw()
+	public void draw()
 	{
 		CustomDrawer.drawRect(this.coor.addYFlat((int)this.coor.getHeight()*.4f).setH(0, 0, (int)this.coor.getHeight()*.2f), Color.white);
 		CustomDrawer.drawRect(this.coor.addXFlat((this.getPos() - 0.05f) * this.coor.getWidth()).setW(0,0,(int)this.coor.getWidth()*.1f), Color.white);
