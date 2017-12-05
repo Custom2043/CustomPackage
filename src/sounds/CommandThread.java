@@ -78,7 +78,7 @@ class CommandThread extends Thread
 				iter.remove();
 			}
 			if (this.continu && this.list.getList().size() == 0)
-				try {Thread.sleep(10);}
+				try {Thread.sleep(1);}
 				catch (InterruptedException e) {}
 
 		}

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_65"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/slick/slick-util.jar"/>
@@ -9,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.3.jar"/>
 	<classpathentry kind="lib" path="lib/jorbis-0.0.17.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/amilhomme/workspace/CodecJLayerMP3/GNEEEEAY.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

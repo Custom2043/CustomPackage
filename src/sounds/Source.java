@@ -16,7 +16,7 @@ abstract class Source
 
 		Logger.debug("Load source "+this.sourceId, this.getClass());
 
-		AL10.alSourcef(this.sourceId, AL10.AL_GAIN, 1f);
+		AL10.alSourcef(this.sourceId, AL10.AL_GAIN, SoundSystem.masterVolume);
 		AL10.alSourcef(this.sourceId, AL10.AL_PITCH, 1);
 		AL10.alSource3f(this.sourceId, AL10.AL_POSITION, x,y,z);
 

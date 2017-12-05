@@ -1,5 +1,6 @@
 package sounds;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
@@ -7,20 +8,21 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.util.vector.Vector3f;
 
+import util.InputStreamSource;
 import util.Logger;
 
 public class SoundSystem
 {
-	public static int noAtte = 0, linearAtte = 1, linearAtteClamped = 2, expoAtte = 3,
-					  expoAtteClamped = 4, inverseAtte = 5, inverseAtteClamped = 6,
-					  byteOffset = 7, sampleOffset = 8, secondOffset = 9;
+	public static int NO_ATTE = 0, LINEAR_ATTE = 1, LINEAR_ATTE_CLAMPED = 2, EXPO_ATTE = 3,
+					  EXPO_ATTE_CLAMPED = 4, INVERSE_ATTE = 5, INVERSE_ATTE_CLAMPED = 6,
+					  BYTE_OFFSET = 7, SAMPLE_OFFSET = 8, SECOND_OFFSET = 9;
 
 	static float masterVolume = 1;
 
 	static CommandThread commands;
 
-	static final int NB_STREAMING_SOURCES = 4;
-	static final int NB_NONSTREAMING_SOURCES = 28;
+	static final int NB_STREAMING_SOURCES = 64;
+	static final int NB_NONSTREAMING_SOURCES = 64;
 
 	static StreamingSource[] streamingSourcesPlaying = new StreamingSource[NB_STREAMING_SOURCES];
 	static SoundSource[] nonStreamingSourcesPlaying = new SoundSource[NB_NONSTREAMING_SOURCES];
@@ -29,6 +31,9 @@ public class SoundSystem
 	static ArrayList<Sound> sounds= new ArrayList<Sound>();
 
 	static Class<? extends Codec> defaultCodec = CodecWav.class;
+	
+	static int defaultStreamingBufferSize = 262144, defaultSoundBufferSize = 2097152;
+	static int defaultNumberOfStreamingBuffers = 3;
 
 	static int getFreePos(Source[] s)
 	{
@@ -44,10 +49,10 @@ public class SoundSystem
 				return i;
 		return -1;
 	}
-	static Sound getSound(String soundPath)
+	static Sound getSound(InputStream stream)
 	{
 		for (Sound s : sounds)
-			if (s.path.equals(soundPath))
+			if (s.stream.equals(stream))
 				return s;
 		return null;
 	}
@@ -95,14 +100,44 @@ public class SoundSystem
 		}
 		catch (LWJGLException e) {Logger.error(e, SoundSystem.class);return false;}
 	}
-	public static int newSource(boolean prior, boolean streaming, String soundPath, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
+	public static int newStreamingSource(Class<? extends Codec> codec, int bufferSize, int bufferNumber, boolean prior, InputStream stream, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
 	{
-		return Command.executeInThread(new Command.CommandNewSource(prior, streaming, soundPath, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, defaultCodec)).sourceId;
+		return Command.executeInThread(new Command.CommandNewSource(bufferSize, bufferNumber, prior, stream, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, codec)).sourceId;
 	}
-	public static int newSource(boolean prior, boolean streaming, String soundPath, boolean loop)
+	public static int newStreamingSource(Class<? extends Codec> codec, int bufferSize, int bufferNumber, boolean prior, InputStreamSource stream, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
 	{
-		return Command.executeInThread(new Command.CommandNewSource(prior, streaming, soundPath, loop,0,0,0,0,0,0,defaultCodec)).sourceId;
+		return Command.executeInThread(new Command.CommandNewSource(prior, true, stream, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, codec)).sourceId;
 	}
+	public static int newStreamingSoundSource(boolean prior, InputStreamSource stream, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, true, stream, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, defaultCodec)).sourceId;
+	}
+	public static int newStreamingSoundSource(boolean prior, InputStream stream, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, true, stream, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, defaultCodec)).sourceId;
+	}
+	public static int newStreamingSoundSource(boolean prior, InputStreamSource stream, boolean loop)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, true, stream, loop,0,0,0,0,0,0,defaultCodec)).sourceId;
+	}
+	public static int newStreamingSoundSource(boolean prior, InputStream stream, boolean loop)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, true, stream, loop,0,0,0,0,0,0,defaultCodec)).sourceId;
+	}
+	
+	public static int newSoundSource(int bS, boolean prior, int sound, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(bS, prior, sound, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, defaultCodec)).sourceId;
+	}
+	public static int newSoundSource(boolean prior, int sound, boolean loop, float x, float y, float z, float maxDistance, float referenceDistance, float rollofFactor)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, sound, loop,x,y,z,maxDistance, referenceDistance, rollofFactor, defaultCodec)).sourceId;
+	}
+	public static int newSoundSource(boolean prior, boolean streaming, InputStream stream, boolean loop)
+	{
+		return Command.executeInThread(new Command.CommandNewSource(prior, sound, loop,0,0,0,0,0,0,defaultCodec)).sourceId;
+	}
+	
 	public static void pause(int sourceId)
 	{
 		Command.executeInThread(new Command.CommandPause(sourceId));
@@ -209,9 +244,17 @@ public class SoundSystem
 	{
 		Command.executeInThread(new Command.CommandStop(sourceId));
 	}
-	public static void unloadSound(String soundPath)
+	public static void loadSound(InputStream is)
 	{
-		Command.executeInThread(new Command.CommandUnloadSound(soundPath));
+		Command.executeInThread(new Command.CommandLoadSound(is, defaultCodec));
+	}
+	public static void loadSound(InputStream is, Class<? extends Codec> c)
+	{
+		Command.executeInThread(new Command.CommandLoadSound(is, c));
+	}
+	public static void unloadSound(int id)
+	{
+		Command.executeInThread(new Command.CommandUnloadSound(id));
 	}
 	public static void setDefaultCodec(Class<? extends Codec> c)
 	{
@@ -224,5 +267,39 @@ public class SoundSystem
 	public static boolean isLooping(int sourceId)
 	{
 		return Command.executeInThread(new Command.CommandLoop(sourceId)).value;
+	}
+	public static void setDefaultBuffers(int maxStreamingBufferSize, int maxSoundBufferSize, int streamingBufferNumber)
+	{
+		defaultStreamingBufferSize = maxStreamingBufferSize;
+		defaultSoundBufferSize = maxSoundBufferSize;
+		defaultNumberOfStreamingBuffers = streamingBufferNumber;
+	}
+	public static int getDefaultStreamingBufferSize()
+	{
+		return defaultStreamingBufferSize;
+	}
+	public static int getDefaultSoundBufferSize()
+	{
+		return defaultSoundBufferSize;
+	}
+	public static int getDefaultNumberOfBuffers()
+	{
+		return defaultNumberOfStreamingBuffers;
+	}
+	public static Class<? extends Codec> setDefaultCodec()
+	{
+		return defaultCodec;
+	}
+	//We can't change the buffer size of a sound, since it is already red
+	public static void setStreamingBuffersData(int streamingSourceId, int maxStreamingBufferSize, int streamingBufferNumber)
+	{
+		Source s = getSource(streamingSourceId);
+		if (!(s instanceof StreamingSource))
+		{	
+			Logger.warning("The source "+streamingSourceId+" is not a streaming source", SoundSystem.class);
+			return;
+		}
+		((StreamingSource)s).bufferSize = maxStreamingBufferSize;
+		((StreamingSource)s).bufferNumbers = streamingBufferNumber;
 	}
 }
