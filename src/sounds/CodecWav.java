@@ -1,9 +1,7 @@
 package sounds;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
 import org.lwjgl.openal.AL10;
 
@@ -11,84 +9,71 @@ import util.Logger;
 
 public class CodecWav extends Codec
 {
-	public int bitsPerSample, channels, fileSize;
-	final FileChannel file;
-	public CodecWav(String s)
+	boolean over = false;
+	int bitsPerSample, channels, fileSize, samplerate, audioFormat;
+	public CodecWav(InputStream is)
 	{
-		this.file = this.openFile(s);
+		super(is);
 		try
 		{
-			this.file.position(22);
+			stream.skip(22);
 			this.channels = this.getValue(2);
 			this.samplerate = this.getValue(4);
-			this.file.position(34);
+			stream.skip(6);
 			this.bitsPerSample = this.getValue(2);
-			this.file.position(40);
+			stream.skip(4);
 			this.fileSize = this.getValue(4);
-			this.file.position(44);
-			} catch(IOException e){Logger.error(e, this.getClass());}
-			if (this.bitsPerSample == 8)
-				this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_STEREO8;
-			else if (this.bitsPerSample == 16)
-				this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
+		} catch(IOException e){Logger.error(e, this.getClass());}
+		if (this.bitsPerSample == 8)
+			this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_STEREO8;
+		else if (this.bitsPerSample == 16)
+			this.audioFormat = this.channels == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
 
-			Logger.debug("samplerate : " + this.samplerate, this.getClass());
-			Logger.debug("channels : " + this.channels, this.getClass());
-			Logger.debug("audioFormat : " + this.audioFormat, this.getClass());
-			this.bufferSize = this.samplerate*(this.bitsPerSample/8)*this.channels;
+		Logger.debug("samplerate : " + this.samplerate, this.getClass());
+		Logger.debug("channels : " + this.channels, this.getClass());
+		Logger.debug("audioFormat : " + this.audioFormat, this.getClass());
 	}
 
 	@Override
-	public ByteBuffer read(int length) {
+	public SoundBuffer readChunk(int length) {
 		try
 		{
-			ByteBuffer bb = ByteBuffer.allocateDirect(Math.min(length, this.fileSize - (int)(this.file.position()-44)));
-
-			//Position - entete
-			this.file.read(bb);
-
-			bb.clear();
-
-			return bb;
+			length -= length % (bitsPerSample * channels); // We take an entire sample
+			byte[] b = new byte[length];
+			int read = stream.read(b);
+			if (stream.available() <= 0)
+				over = true;
+			return new SoundBuffer(b, read, samplerate, audioFormat);
 		}
 		catch (IOException e) {Logger.error(e, this.getClass());}
 		return null;
 	}
-
-	FileChannel openFile(String s)
-	{
-		try {return FileChannel.open(Paths.get(s));}
-		catch (IOException e) {Logger.error(e, this.getClass());return null;}
-	}
-
 	@Override
-	public void quit()
+	public void quit(){}
+	
+	int getValue(int numberLength) throws IOException
 	{
-		try {
-			this.file.close();
-		} catch (IOException e) {
-			Logger.error(e, this.getClass());
-		}
-	}
-	int getValue(int number) throws IOException
-	{
-		ByteBuffer b = ByteBuffer.allocateDirect(number);
-		this.file.read(b);
-		b.clear();
+		byte[] b = new byte[numberLength];
+		stream.read(b);
 		int value = 0;
-		for (int i=0;i<number;i++)
+		for (int i=0;i<b.length;i++)
 		{
-			int by = b.get();
-			if (by < 0)
-				by = 256 + by;
-			value += by << (8*i);
+			int bb = b[i];
+			if (bb < 0)
+				bb = 256 + bb;
+			value += bb << (8*i);
 		}
 		return value;
 	}
 
 	@Override
-	public void reset() {
-		try {this.file.position(0);}
-		catch (IOException e) {Logger.error(e, this.getClass());}
+	public SoundBuffer readAll() 
+	{
+		return readChunk(fileSize);
+	}
+
+	@Override
+	public boolean isStreamOver() {
+		return over;
 	}
 }

@@ -1,7 +1,5 @@
 package sounds;
 
-import java.io.InputStream;
-
 import org.lwjgl.openal.AL10;
 
 import util.Logger;
@@ -9,13 +7,12 @@ import util.Logger;
 class Sound
 {
 	final int buffer;
-	final InputStream stream;
-	Sound(Codec c, InputStream is)
+	Sound(Codec c)
 	{
-		stream = is;
 		this.buffer = AL10.alGenBuffers();
 		Logger.debug("Load sound "+this.buffer, this.getClass());
-		AL10.alBufferData(this.buffer, c.audioFormat, c.readAll(), c.samplerate);
+		SoundBuffer sb = c.readAll();
+		AL10.alBufferData(this.buffer, sb.audioFormat, sb.toByteBuffer(), sb.samplerate);
 		c.quit();
 	}
 }

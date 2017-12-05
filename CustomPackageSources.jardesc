@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
     <jar path="CustomPackage/CustomPackageSources.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/CustomPackage/CustomPackageSources.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -11,13 +11,13 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <javaElement handleIdentifier="=CustomPackage/src&lt;gui"/>
         <javaElement handleIdentifier="=CustomPackage/src&lt;compiler"/>
-        <javaElement handleIdentifier="=CustomPackage/src&lt;boot"/>
-        <javaElement handleIdentifier="=CustomPackage/src&lt;collision"/>
-        <javaElement handleIdentifier="=CustomPackage/src&lt;drawer"/>
-        <javaElement handleIdentifier="=CustomPackage/src&lt;util"/>
         <javaElement handleIdentifier="=CustomPackage/src&lt;value"/>
         <javaElement handleIdentifier="=CustomPackage/src&lt;sounds"/>
+        <javaElement handleIdentifier="=CustomPackage/src&lt;boot"/>
+        <javaElement handleIdentifier="=CustomPackage/src&lt;gui"/>
+        <javaElement handleIdentifier="=CustomPackage/src&lt;drawer"/>
+        <javaElement handleIdentifier="=CustomPackage/src&lt;collision"/>
+        <javaElement handleIdentifier="=CustomPackage/src&lt;util"/>
     </selectedElements>
 </jardesc>

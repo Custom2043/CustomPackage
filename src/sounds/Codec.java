@@ -1,22 +1,27 @@
 package sounds;
 
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
-public abstract class Codec
+abstract class Codec
 {
 	public InputStream stream;
-	public int samplerate,audioFormat;
+	public Codec(InputStream is)
+	{
+		stream = is;
+	}
 	// Codecs must implements an constructor that takes an input stream
 	// and needs to write stream, samplerate and audioFormat
 	/**
-	 * Used when streaming
+	 * Used by streaming source
 	 */
-	public abstract ByteBuffer readChunk(int chunkSize);
+	public abstract SoundBuffer readChunk(int chunkSize);
 	/**
 	 * Used by sounds
 	 */
-	public abstract ByteBuffer readAll();
+	public abstract SoundBuffer readAll();
 	public abstract boolean isStreamOver();
+	/**
+	 * Stream is automatically closed
+	 */
 	public abstract void quit();
 }

@@ -1,5 +1,6 @@
 package sounds;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -7,6 +8,7 @@ import java.nio.IntBuffer;
 import java.util.Iterator;
 
 import org.lwjgl.openal.AL10;
+import org.newdawn.slick.util.Log;
 
 import util.Logger;
 import util.UpdateList;
@@ -22,7 +24,7 @@ class CommandThread extends Thread
 	@Override
 	public void run()
 	{
-		while (this.continu || this.list.getList().size() != 0)
+		while (this.continu)
 		{
 			for (int i=0;i<SoundSystem.NB_NONSTREAMING_SOURCES;i++)
 				if (SoundSystem.nonStreamingSourcesPlaying[i] != null)
@@ -40,27 +42,40 @@ class CommandThread extends Thread
 					}
 					else if (SoundSystem.streamingSourcesPlaying[i].loop || AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_SOURCE_STATE) != AL10.AL_PAUSED)
 					{
-						int toLoad = AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_BUFFERS_PROCESSED);
+						StreamingSource source = SoundSystem.streamingSourcesPlaying[i];
+						int toLoad = source.bufferNumbers - AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_BUFFERS_QUEUED);
 						if (toLoad > 1)
 							Logger.debug("Load "+toLoad+" buffers for source "+SoundSystem.streamingSourcesPlaying[i].sourceId, CommandThread.class);
 						for(int j=0;j<toLoad;j++)
 						{
-							StreamingSource source = SoundSystem.streamingSourcesPlaying[i];
-							ByteBuffer bb = source.codec.read();
-							AL10.alSourceUnqueueBuffers(SoundSystem.streamingSourcesPlaying[i].sourceId, createIntBuffer(1));
-							AL10.alDeleteBuffers(source.buffers[0]);
-							source.buffers[0] = source.buffers[1];
-							source.buffers[1] = source.buffers[2];
-							if (bb.capacity() == 0 && source.loop)
+							if (source.codec.isStreamOver())
 							{
-								source.codec.reset();
-								bb = source.codec.read();
+								try 
+								{
+									source.codec.stream.close(); // En vrai osef de si tu te ferme ou pas
+								} catch (IOException e) {e.printStackTrace();}
+								if (source.loop && source.source != null && source.source.canStreamBeRetrieved())
+									source.codec.stream = source.source.getStreamBack();
 							}
-							if (bb.capacity() != 0) // Encore des donn�es
+							else
 							{
-								source.buffers[2] = AL10.alGenBuffers();
-								AL10.alBufferData(source.buffers[2], source.codec.audioFormat, bb, source.codec.samplerate);
-								AL10.alSourceQueueBuffers(SoundSystem.streamingSourcesPlaying[i].sourceId, source.buffers[2]);
+								SoundBuffer sb = source.codec.readChunk(source.bufferSize);
+								if (sb == null) // Problem
+									Logger.error("Read null sound buffer from source "+source.sourceId, getClass());
+								else
+								{
+									AL10.alSourceUnqueueBuffers(SoundSystem.streamingSourcesPlaying[i].sourceId, createIntBuffer(1));
+									AL10.alDeleteBuffers(source.buffers[0]);
+									for (int k=0;k<source.bufferNumbers-1;k++)
+										source.buffers[k] = source.buffers[k+1];
+									
+									source.buffers[source.bufferNumbers-1] = AL10.alGenBuffers();
+									AL10.alBufferData(source.buffers[source.bufferNumbers-1], sb.audioFormat, sb.toByteBuffer(), sb.samplerate);
+									Log.debug(""+sb.audioFormat);
+									Log.debug(""+sb.toByteBuffer());
+									Log.debug(""+sb.samplerate);
+									AL10.alSourceQueueBuffers(SoundSystem.streamingSourcesPlaying[i].sourceId, source.buffers[source.bufferNumbers-1]);
+								}
 							}
 						}
 						if (AL10.alGetSourcei(SoundSystem.streamingSourcesPlaying[i].sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_STOPPED)

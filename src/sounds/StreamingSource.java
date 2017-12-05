@@ -1,16 +1,21 @@
 package sounds;
 
+import util.InputStreamSource;
+
 class StreamingSource extends Source
 {
 	int[] buffers = new int[3];
 	final Codec codec;
 	boolean loop;
-	int bufferNumbers = SoundSystem.defaultNumberOfStreamingBuffers;
-	int bufferSize = SoundSystem.defaultStreamingBufferSize;
-	StreamingSource(Codec c, int bN, int bS, int s, boolean p, boolean l, float x, float y,float z,float mD, float rD, float roll)
+	int bufferNumbers, bufferSize;
+	InputStreamSource source;
+	StreamingSource(Codec c, InputStreamSource so,  int bS, int bN, int s, boolean p, boolean l, float x, float y,float z,float mD, float rD, float roll)
 	{
 		super(s, p, l, x, y, z, mD, rD, roll);
+		source = so;
 		this.codec = c;
+		this.bufferNumbers = bN;
+		this.bufferSize = bS;
 	}
 	@Override
 	void setLooping(boolean l) {

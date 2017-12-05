@@ -1,12 +1,11 @@
 package test;
 
-import sounds.CodecMP3;
-import sounds.SoundSystem;
+import sounds.*;
 import util.Logger;
 
 public class SoundSystemTester {
 
-	public static int sourceId;
+	public static int sourceId, soundId;
 	public static void main(String[] args) throws InterruptedException
 	{
 		SoundSystem.init();
@@ -15,7 +14,10 @@ public class SoundSystemTester {
 
 		Logger.setLoggerProperties(true, true, true, true);
 
-		sourceId = SoundSystem.newSource(false,  true, "welcome.mp3", true);
+		soundId = SoundSystem.loadSound("welcome.mp3");
+		sourceId = SoundSystem.newSoundSource(soundId, false, true);
+		
+		//sourceId = SoundSystem.newStreamingSource(new FileInputStreamSource("welcome.mp3"), false, true);
 
 		SoundSystem.play(sourceId);
 

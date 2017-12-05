@@ -68,19 +68,6 @@ abstract class Command
 				i = getNonPrioPos(getSourcesPlaying(this.source.streaming()));
 			if (i != -1) // Si il y a de la place
 			{
-				if (this.source.streaming() && AL10.alGetSourcei(this.source.sourceId, AL10.AL_BUFFERS_QUEUED) == 0)
-				{
-					this.source.getStreamingSource().codec.reset();
-					StreamingSource s = this.source.getStreamingSource();
-					// On charge le début de la musique
-					for (int j=0;j<3;j++)
-					{
-						s.buffers[j] = AL10.alGenBuffers();
-						AL10.alBufferData(s.buffers[j] , s.codec.audioFormat, s.codec.read(), s.codec.samplerate);
-						AL10.alSourceQueueBuffers(this.source.sourceId, s.buffers[j]);
-					}
-					Logger.debug("Load sound in stream", this.getClass());
-				}
 				getSourcesPlaying(this.source.streaming())[i] = this.source;
 				AL10.alSourcePlay(this.source.sourceId);
 				Logger.debug("Play source "+this.source.sourceId+" in channel "+(this.source.streaming() ?"":"non ")+"streaming channel "+i, this.getClass());
@@ -146,18 +133,16 @@ abstract class Command
 	static class CommandLoadSound extends Command
 	{
 		InputStream stream;Class<? extends Codec> codec;
+		int buffer = -1;
 		CommandLoadSound(InputStream is, Class<? extends Codec> c) {this.stream=is;this.codec=c;}
 		@Override
 		void handle()
 		{
-			loadSound(stream, codec);
-		}
-		private static void loadSound(InputStream is, Class<? extends Codec> c)
-		{
 			try
 			{
-				Sound s = new Sound(c.getConstructor(String.class).newInstance(is), is);
+				Sound s = new Sound(codec.getConstructor(InputStream.class).newInstance(stream));
 				sounds.add(s);
+				buffer = s.buffer;
 			}
 			catch (Exception e) {Logger.error(e, CommandLoadSound.class);}
 		}
@@ -197,28 +182,33 @@ abstract class Command
 	static class CommandNewSource extends Command
 	{
 		int sourceId;
-		InputStream stream;boolean prior, loop, streaming;Class<? extends Codec> codec;
-		InputStreamSource streamSource;
+		InputStream stream; InputStreamSource streamSource; int soundId;
+		boolean prior, loop, streaming;Class<? extends Codec> codec;
 		float x, y, z, maxD, referD, rolloff;
 		int bufferSize = SoundSystem.defaultSoundBufferSize, bufferNumber = SoundSystem.defaultStreamingBufferSize;
-		CommandNewSource(boolean p, boolean str, InputStream so, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) {this.stream = so;
-		this.prior=p;this.streaming = str;this.codec = c;this.loop = l;this.x=x2;this.y=y2;this.z=z2;this.maxD = mD; this.referD = rD;this.rolloff = rol;}
 		
-		CommandNewSource(int bS, int bN, boolean p, InputStream so, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) 
-		{
-			this(p, true, so, l, x2, y2, z2, mD, rD, rol, c);
-			bufferSize = bS;
-			bufferNumber = bN;
+		CommandNewSource(int bS, int bN, boolean p,  InputStream so, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) 
+		{ // Streaming source with InputStream
+			this.stream = so;this.bufferSize = bS; this.bufferNumber = bN; // Source
+			this.prior=p;this.streaming = true;this.codec = c;this.loop = l; // Options
+			this.x=x2;this.y=y2;this.z=z2; // Position
+			this.maxD = mD; this.referD = rD;this.rolloff = rol; // Attenuation
 		}
 		
-		CommandNewSource(boolean p, boolean str, InputStreamSource so, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) {this.streamSource = so;
-		this.prior=p;this.streaming = str;this.codec = c;this.loop = l;this.x=x2;this.y=y2;this.z=z2;this.maxD = mD; this.referD = rD;this.rolloff = rol;}
-		
 		CommandNewSource(int bS, int bN, boolean p, InputStreamSource so, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) 
-		{
-			this(p, true, so, l, x2, y2, z2, mD, rD, rol, c);
-			bufferSize = bS;
-			bufferNumber = bN;
+		{ // Streaming source with InputStreamSource
+			this.stream = so.getStreamBack(); this.streamSource = so;this.bufferSize = bS; this.bufferNumber = bN; // Source
+			this.prior=p;this.streaming = true;this.codec = c;this.loop = l; // Options
+			this.x=x2;this.y=y2;this.z=z2; // Position
+			this.maxD = mD; this.referD = rD;this.rolloff = rol; // Attenuation
+		}
+		
+		CommandNewSource(int bS, boolean p, int sound, boolean l, float x2, float y2, float z2, float mD, float rD, float rol, Class<? extends Codec> c) 
+		{ // Streaming source with InputStreamSource
+			this.soundId = sound; this.bufferSize = bS; // Source
+			this.prior=p;this.streaming = false;this.codec = c;this.loop = l; // Options
+			this.x=x2;this.y=y2;this.z=z2; // Position
+			this.maxD = mD; this.referD = rD;this.rolloff = rol; // Attenuation
 		}
 		
 		@Override
@@ -231,20 +221,12 @@ abstract class Command
 			if (this.streaming)
 				try
 				{
-					source = new StreamingSource(this.codec.getConstructor(String.class).newInstance(this.stream), bufferSize, bufferNumber, sourceId, this.prior, this.loop, this.x,this.y,this.z, this.maxD, this.referD, this.rolloff);
+					source = new StreamingSource(this.codec.getConstructor(InputStream.class).newInstance(this.stream), streamSource, bufferSize, bufferNumber, sourceId, this.prior, this.loop, this.x,this.y,this.z, this.maxD, this.referD, this.rolloff);
 				}
 				catch (Exception e) {Logger.error(e, this.getClass());}
 			else
 			{ // Load Sound
-				Sound s = getSound(this.stream);
-
-				if (s == null)
-					try
-					{
-						s = new Sound(this.codec.getConstructor(String.class).newInstance(this.stream), this.stream);
-						sounds.add(s);
-					}
-					catch (Exception e) {Logger.error(e, this.getClass());}
+				Sound s = getSound(soundId);
 				AL10.alSourcei(sourceId, AL10.AL_BUFFER, s.buffer);
 				//Logger.debug("End of loading of sound "+s.path+", number of buffer : "+, CommandNewSource.class);
 				source = new SoundSource(sourceId, this.prior, s, this.loop, this.x, this.y, this.z, this.maxD, this.referD, this.rolloff);
