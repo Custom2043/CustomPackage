@@ -1,0 +1,23 @@
+#version 100
+
+#define PI 3.1415926535897932384626433832795
+
+attribute vec3 x;
+attribute vec3 y;
+attribute vec4 color;
+attribute float freq;
+
+varying vec4 out_color;
+
+uniform mat4 projectionMatrix;
+uniform vec3 screen;
+uniform float fft[200];
+
+void main()
+{
+	float c = cos(PI * freq / 100.0), s = sin(PI * freq / 100.0);
+	//float c = 0.0, s = 1.0;
+	gl_Position = projectionMatrix * vec4(x.x*screen.x + x.z + x.y*c*fft[int(freq)] + y.y*s, y.x*screen.y + y.z - x.y*s*fft[int(freq)] + y.y*c, 0.0, 1.0);
+	out_color = color;
+}
+//*fft[int(freq)]

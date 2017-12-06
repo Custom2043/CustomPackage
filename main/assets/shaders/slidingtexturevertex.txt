@@ -1,0 +1,22 @@
+#version 100
+
+attribute vec3 x;
+attribute vec3 y;
+attribute vec4 color;
+attribute vec2 textureCoordinates;
+
+varying vec4 out_color;
+varying vec2 passCoor;
+
+uniform mat4 projectionMatrix;
+uniform vec3 screen;
+uniform float xx;
+uniform float yy;
+
+void main()
+{
+	
+	gl_Position = projectionMatrix * vec4(int(x.x*screen.x+x.y*screen.z+x.z+xx),int(y.x*screen.y+y.y*screen.z+y.z+yy),0.0,1.0);
+	out_color = color;
+	passCoor = textureCoordinates;
+}

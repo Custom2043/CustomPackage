@@ -1,0 +1,14 @@
+#version 100
+
+precision mediump float;
+varying vec4 out_color;
+varying vec2 passCoor;
+
+uniform sampler2D modelTexture;
+uniform float alpha;
+
+void main()
+{
+	vec4 v = (out_color/255.0) * texture2D(modelTexture, passCoor);
+	gl_FragColor = vec4(v.xyz, v.w * alpha);
+}
