@@ -20,7 +20,7 @@ public class CompiledCode extends SimpleJavaFileObject {
     public CompiledCode(String classesFolder, String className, Kind kind) throws IOException, URISyntaxException {
         super(new URI(className), kind);
         File f = new File(classesFolder + CustomCompiler.toClassFile(className));
-        Logger.debug("Write in "+f, this.getClass());
+        Logger.debug("Write in "+f);
         f.getParentFile().mkdirs();
         this.fos = new FileOutputStream(f);
     }

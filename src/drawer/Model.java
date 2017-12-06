@@ -1,7 +1,5 @@
 package drawer;
 
-import org.newdawn.slick.opengl.Texture;
-
 public abstract class Model
 {
 	private short usedVertexArray = 0;

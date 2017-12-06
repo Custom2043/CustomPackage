@@ -97,7 +97,7 @@ public abstract class CustomZoneTexte extends CustomBouton
 	    		return text;
 	        }
 	    }
-	    catch (UnsupportedFlavorException | IOException e) {Logger.error(e, CustomZoneTexte.class);}
+	    catch (UnsupportedFlavorException | IOException e) {Logger.error(e);}
 	    return null;
 	}
 	public static void setClipboardContents(String copy)

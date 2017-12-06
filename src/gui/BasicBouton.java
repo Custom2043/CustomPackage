@@ -15,7 +15,7 @@ public class BasicBouton extends CustomBouton
 	{
 		try {
 			font = new AngelCodeFont("Tahoma_18.fnt","Tahoma_18.png");}
-		catch (SlickException e) {Logger.error(e, BasicBouton.class);}
+		catch (SlickException e) {Logger.error(e);}
 	}
 	public BasicBouton(String n, int i, ScreenCoor c, boolean a)
 	{

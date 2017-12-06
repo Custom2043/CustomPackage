@@ -1,6 +1,8 @@
 package test;
 
-import sounds.*;
+import audio.AudioSystem;
+import audio.CodecMP3;
+import util.FileInputStreamSource;
 import util.Logger;
 
 public class SoundSystemTester {
@@ -8,21 +10,22 @@ public class SoundSystemTester {
 	public static int sourceId, soundId;
 	public static void main(String[] args) throws InterruptedException
 	{
-		SoundSystem.init();
+		AudioSystem.init();
 		
-		SoundSystem.setDefaultCodec(CodecMP3.class);
+		AudioSystem.setDefaultCodec(CodecMP3.class);
 
 		Logger.setLoggerProperties(true, true, true, true);
 
-		soundId = SoundSystem.loadSound("welcome.mp3");
-		sourceId = SoundSystem.newSoundSource(soundId, false, true);
+		//soundId = AudioSystem.loadSound("welcome.mp3");
+		//sourceId = AudioSystem.newSoundSource(soundId, false, true);
 		
-		//sourceId = SoundSystem.newStreamingSource(new FileInputStreamSource("welcome.mp3"), false, true);
-
-		SoundSystem.play(sourceId);
+		AudioSystem.setDefaultBuffers(65336, 655360, 2);
+		sourceId = AudioSystem.newStreamingSource(new FileInputStreamSource("welcome.mp3"), false, true);
+		
+		AudioSystem.play(sourceId);
 
 		Thread.sleep(9000);
 
-		SoundSystem.quit();
+		AudioSystem.quit();
 	}
 }

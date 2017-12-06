@@ -1,0 +1,12 @@
+#version 100
+
+precision mediump float;
+varying vec4 out_color;
+varying vec2 passCoor;
+
+uniform sampler2D modelTexture;
+
+void main()
+{
+	gl_FragColor = (out_color/255.0) * texture2D(modelTexture, passCoor);
+}

@@ -26,7 +26,7 @@ public class FileInputStreamSource implements InputStreamSource
 		try
 		{
 			return new FileInputStream(file);
-		}catch(Exception e){Logger.error("Can't create stream : "+file.toString(), this.getClass());Logger.error(e, getClass());}
+		}catch(Exception e){Logger.error("Can't create stream : "+file.toString());Logger.error(e);}
 		return null;
 	}
 }

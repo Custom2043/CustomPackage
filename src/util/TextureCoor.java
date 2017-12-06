@@ -1,6 +1,6 @@
 package util;
 
-import org.newdawn.slick.opengl.Texture;
+import drawer.Texture;
 
 public class TextureCoor
 {
@@ -27,19 +27,19 @@ public class TextureCoor
 	}
 	public float getXStart(Texture text)
 	{
-		return (this.xSize + (this.xFlat/text.getImageWidth()))*text.getWidth();
+		return (this.xSize + (this.xFlat/text.width));
 	}
 	public float getYStart(Texture text)
 	{
-		return (this.ySize + (this.yFlat/text.getImageHeight()))*text.getHeight();
+		return (this.ySize + (this.yFlat/text.height));
 	}
 	public float getWidth(Texture text)
 	{
-		return (this.wSize + (this.wFlat/text.getImageWidth()))*text.getWidth();
+		return (this.wSize + (this.wFlat/text.width));
 	}
 	public float getHeight(Texture text)
 	{
-		return (this.hSize + (this.hFlat/text.getImageHeight()))*text.getHeight();
+		return (this.hSize + (this.hFlat/text.height));
 	}
 	public float getXEnd(Texture text)
 	{
@@ -51,7 +51,7 @@ public class TextureCoor
 	}
 	public float[] inFloatArray(Texture text)
 	{
-		return new float[]{this.getXStart(text), this.getYStart(text), this.getXStart(text), this.getYEnd(text), this.getXEnd(text), this.getYEnd(text), this.getXEnd(text), this.getYStart(text)};
+		return new float[]{this.getXStart(text), this.getYStart(text), this.getYEnd(text), this.getXStart(text), this.getXEnd(text), this.getYEnd(text), this.getXStart(text), this.getYEnd(text)};
 	}
 }
 

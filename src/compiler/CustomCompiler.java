@@ -54,8 +54,8 @@ public class CustomCompiler {
 	        for (String s : libFolders)
 	        	this.actOnRepertory(Act.addToLib, s);
 	        this.addProperties(this.manifestClasspath);
-	        Logger.debug("Manifest ClassPath : "+this.manifestClasspath, this.getClass());
-	        Logger.debug("Manifest ClassPath : "+this.compilerClasspath, this.getClass());
+	        Logger.debug("Manifest ClassPath : "+this.manifestClasspath);
+	        Logger.debug("Compiler ClassPath : "+this.compilerClasspath);
     	}
     }
     public void compileSources()
@@ -63,7 +63,7 @@ public class CustomCompiler {
     	try {
 			FileUtils.deleteDirectory(new File(this.classes));
 		} catch (IOException e) {
-			Logger.error(e, this.getClass());
+			Logger.error(e);
 		}
     	this.actOnRepertory(Act.compile, this.sources);
     }
@@ -73,7 +73,7 @@ public class CustomCompiler {
         Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(sourceCode);
         ExtendedStandardJavaFileManager fileManager = new ExtendedStandardJavaFileManager(this.javac.getStandardFileManager(null, null, null), this.classes);
         JavaCompiler.CompilationTask task = this.javac.getTask(null, fileManager, null, Arrays.asList("-classpath", this.compilerClasspath+this.sources+";"+this.classes), null, compilationUnits);
-        Logger.debug(task.call().toString(), this.getClass());
+        Logger.debug(task.call().toString());
     }
 
     private void actOnRepertory(Act act, String basicReper, String reper)
@@ -89,7 +89,7 @@ public class CustomCompiler {
 			    	else if (Files.isRegularFile(file))
 			    		this.executeAct(act, basicReper, file.subpath(nameCount, file.getNameCount()).toString(), this);
 			}
-	    	catch (IOException | DirectoryIteratorException x) {Logger.error(x, this.getClass());}
+	    	catch (IOException | DirectoryIteratorException x) {Logger.error(x);}
     	}
     }
     private void actOnRepertory(Act act, String basicReper)
@@ -127,7 +127,7 @@ public class CustomCompiler {
 		{
 	    	relativePath = relativePath.replace("\\", "/");
 	    	folderPath = folderPath.replace("\\", "/");
-	    	Logger.debug("Compile file : "+relativePath, this.getClass());
+	    	Logger.debug("Compile file : "+relativePath);
 	   	 	this.compile(toClassName(relativePath), new String(Files.readAllBytes(Paths.get(folderPath + relativePath)), StandardCharsets.UTF_8));
 		}
 		if (act == Act.addToLib)

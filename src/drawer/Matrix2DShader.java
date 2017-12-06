@@ -23,7 +23,14 @@ public abstract class Matrix2DShader extends ShaderProgram
 	{
 		this.loadVector(this.location_ScreenData, this.screenData);
 	}
-	@Override
+	public void loadGui(float g)
+    {
+        setGui(g); //Set gui for others shaders
+        this.screenData = trueScreenData;
+        this.loadScreenData();
+    }
+    public static void setGui(float g){setScreenData(trueScreenData.x, trueScreenData.y, g);}
+    @Override
 	public void start()
 	{
 		super.start();
@@ -42,5 +49,6 @@ public abstract class Matrix2DShader extends ShaderProgram
 		this.location_ScreenData = super.getUniformLocation("screen");
 	}
 	public static void setMatrix(Matrix4f m){trueMatrix = m;}
-	public static void setScreenData(int w, int h, int g){trueScreenData = new Vector3f(w,h,g);}
+	public static void setScreenData(float w, float h, float g){trueScreenData = new Vector3f(w,h, g);}
+	public static float getCurrentGui(){return trueScreenData.z;}
 }

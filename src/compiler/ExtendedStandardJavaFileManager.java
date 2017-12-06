@@ -32,7 +32,7 @@ public class ExtendedStandardJavaFileManager extends ForwardingJavaFileManager<J
     public JavaFileObject getJavaFileForOutput(JavaFileManager.Location location, String className, JavaFileObject.Kind kind, FileObject sibling) throws IOException {
     	try {
 			return new CompiledCode(this.classesFolder, className, kind);
-		} catch (URISyntaxException e) {Logger.error(e, this.getClass());}
+		} catch (URISyntaxException e) {Logger.error(e);}
 		return null;
     }
 }

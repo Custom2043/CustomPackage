@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.Texture;
 
 import util.QuadColor;
 import util.ScreenCoor;

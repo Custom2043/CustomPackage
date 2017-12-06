@@ -89,7 +89,7 @@ public class Collision
 	{
 		if (a >= 0 && a <= 1)
 		{
-			Logger.debug("Add new Touche : " + new Touche(vec, mouvant, a, mA, fA).toString(), this.getClass());
+			Logger.debug("Add new Touche : " + new Touche(vec, mouvant, a, mA, fA).toString());
 			this.touches.add(new Touche(vec, mouvant, a, mA, fA));
 		}
 	}

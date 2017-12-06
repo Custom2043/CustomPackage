@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
 
 import util.ScreenCoor;
 import util.TextureCoor;
