@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.InputStreamSource;
 import util.Logger;
+import util.TimeShift;
 
 abstract class Command
 {
@@ -427,6 +428,17 @@ abstract class Command
 				if (this.offsetMod == AudioSystem.SECOND_OFFSET)
 					AL10.alSourcei(this.source.sourceId, AL11.AL_SEC_OFFSET, this.value);
 			}
+		}
+	}
+	static class VolumeFading
+	{
+		final int sourceId;
+		final float baseVolume, endVolume;
+		final TimeShift shift;
+		VolumeFading(int sid, float bV, float eV, TimeShift ts) 
+		{
+			sourceId = sid;
+			baseVolume = bV; endVolume = eV; shift = ts;
 		}
 	}
 }

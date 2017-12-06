@@ -4,12 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.LinkedList;
 
-import custom.osu.main.MainActivity;
-import custom.osu.util.Color;
-import custom.osu.util.QuadColor;
-import custom.osu.util.ScreenCoor;
-import custom.osu.util.TextureCoor;
-
 public class AngelCodeFont
 {
     private int lineHeight;

@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import org.lwjgl.openal.AL10;
 
+import audio.Command.VolumeFading;
 import util.Logger;
 import util.UpdateList;
 
@@ -15,6 +16,7 @@ class CommandThread extends Thread
 {
 	private boolean continu;
 	public UpdateList<Command> list = new UpdateList<Command>();
+	public UpdateList<Command.VolumeFading> fadings = new UpdateList<Command.VolumeFading>();
 	public CommandThread()
 	{
 		this.continu = true;
@@ -61,6 +63,13 @@ class CommandThread extends Thread
 						catch (InterruptedException e) {}
 					iter.remove();
 				}
+			}
+			for (Iterator<VolumeFading> iter = this.fadings.getList().iterator();iter.hasNext();)
+			{
+				VolumeFading fading = iter.next();
+				new Command.CommandFloat(fading.sourceId, AL10.AL_GAIN, fading.baseVolume + (fading.endVolume - fading.baseVolume) * fading.shift.getRatio());
+				if (fading.shift.isOver())
+					iter.remove();
 			}
 			if (this.continu && this.list.getList().size() == 0)
 				try {Thread.sleep(1);}

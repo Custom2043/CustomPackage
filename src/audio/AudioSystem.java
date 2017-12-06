@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.InputStreamSource;
 import util.Logger;
+import util.TimeShift;
 
 public class AudioSystem
 {
@@ -324,5 +325,9 @@ public class AudioSystem
 			return new FileInputStream(new File(source));
 		}catch(IOException e) {Logger.error("The file "+source+" doesn't exist");}
 		return null;
+	}
+	public static void fade(int source, TimeShift shift, float baseVolume, float endVolume)
+	{
+		commands.fadings.add(new Command.VolumeFading(source, baseVolume, endVolume, shift));
 	}
 }
